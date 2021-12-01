@@ -4,6 +4,8 @@ namespace App\Entity;
 
 // On va appliquer la logique de mapping via l'annotation @ORM
 // qui correspond à un dossier "Mapping" de Doctrine
+
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -32,6 +34,16 @@ class Movie
   private $title;
 
   /**
+   * @ORM\Column(type="datetime")
+   */
+  private $createdAt;
+
+  /**
+   * @ORM\Column(type="datetime", nullable=true)
+   */
+  private $updatedAt;
+
+  /**
    * Get clé primaire
    */ 
   public function getId()
@@ -52,9 +64,49 @@ class Movie
    *
    * @return  self
    */ 
-  public function setTitle($title)
+  public function setTitle(string $title)
   {
     $this->title = $title;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of createdAt
+   */ 
+  public function getCreatedAt()
+  {
+    return $this->createdAt;
+  }
+
+  /**
+   * Set the value of createdAt
+   *
+   * @return  self
+   */ 
+  public function setCreatedAt(DateTime $createdAt)
+  {
+    $this->createdAt = $createdAt;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of updatedAt
+   */ 
+  public function getUpdatedAt()
+  {
+    return $this->updatedAt;
+  }
+
+  /**
+   * Set the value of updatedAt
+   *
+   * @return  self
+   */ 
+  public function setUpdatedAt(DateTime $updatedAt)
+  {
+    $this->updatedAt = $updatedAt;
 
     return $this;
   }
