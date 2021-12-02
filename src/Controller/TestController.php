@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Movie;
+use DateTime;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,6 +24,8 @@ class TestController extends AbstractController
 
        // On renseigne l'entité
        $movie->setTitle("Blade Runner");
+       // Date courante pour created at
+       $movie->setCreatedAt(new DateTime());
 
        // 1. On demande au Manager de se préparer à "persister" l'entité
        $entityManager = $doctrine->getManager();
@@ -30,6 +33,8 @@ class TestController extends AbstractController
 
        // 2. 2xécute les requêtes SQL nécessaires (ici, INSERT INTO)
        $entityManager->flush();
+
+       dump($movie);
 
        return new Response('Film ajouté :'.$movie->getId(). '</body>');
        // PS : le </body> pour afficher la toolbar
@@ -69,5 +74,29 @@ class TestController extends AbstractController
         dd($movie);
 
         return new Response('film n'.$id.'</body>');
+    }
+
+    /**
+     * Edit movie
+     * 
+     * @Route("/test/edit/{id<\d+>}")
+     */
+    public function edit($id, ManagerRegistry $doctrine)       
+    {
+        // On va chercher le film, on le modifie, on le sauvegarde
+        $movieRepository = $doctrine->getRepository(Movie::class);
+        $movie = $movieRepository->find($id);
+
+        // Mise à jour
+        $movie->setUpdatedAt(new DateTime());
+
+        // Sauvegarde 
+        // 1. On récupère le Manager de doctrine
+       $entityManager = $doctrine->getManager();
+
+       // 2. 2xécute les requêtes SQL nécessaires (ici, UPDATE)
+       $entityManager->flush();
+
+       return $this->redirectToRoute('read', ['id' => $id]);
     }
 }
